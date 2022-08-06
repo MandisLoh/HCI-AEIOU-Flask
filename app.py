@@ -27,8 +27,14 @@ def my_form():
 
 @app.route('/', methods=['POST'])
 def textentry():
-    text = request.form['text']
-    return text
+   text = request.form['text']
+   prediction = model.predict([text])
+   
+   if (prediction==1):
+      prediction = "Meeting"
+   else:
+      prediction = "Normal"
+   return prediction
 
 
 if __name__ == "__main__":
