@@ -13,12 +13,24 @@ from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 from html_to_text import html2text
 from dateparser.search import search_dates
+import joblib
 
 
 app = Flask(__name__)
-model = pickle.load(open('model.pkl', 'rb'))
+model = joblib.load('pipeline.pkl')
 
-
+# #To use the predict button in our web-app
+@app.route('/predict',methods=['GET'])
+def predict():
+   html = './templates/inbox-faith-email.html'
+   text = html2text(html)
+   prediction = prediction = model.predict([text])
+   
+   if (prediction==1):
+      prediction = "Meeting"
+   else:
+      prediction = "Normal"
+   return render_template('predict.html', prediction_text=f'Predicted category is {prediction}')
 
 @app.route('/')
 def inbox_main_unread():
@@ -35,7 +47,7 @@ def inbox_faith_email_w_pop_up():
    fh= open('./templates/calendar-main.html')
    content = fh.read()
    content = content.replace(re.findall('''<div class="caption-UdZOvo valign-text-middle opensans-bold-chicago-16px">Friday</div>
-            <div class="caption-Q8xn1u valign-text-middle opensans-bold-chicago-16px">24</div>''', content)[0], 
+         <div class="caption-Q8xn1u valign-text-middle opensans-bold-chicago-16px">24</div>''', content)[0], 
          '''<div class="caption-UdZOvo valign-text-middle opensans-bold-chicago-16px">Friday</div>
          <div class="caption-Q8xn1u valign-text-middle opensans-bold-chicago-16px">24</div>
          <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
@@ -58,11 +70,12 @@ def inbox_faith_email_detected():
    final_features = html2text(html)
    prediction = model.predict(count_vect.fit_transform([final_features]))
    
-   if (prediction==2) or (prediction==3):
+   if (prediction==1):
       prediction = "Meeting"
+      
    else:
       prediction = "Normal"
-   return render_template('inbox-faith-email-detected.html', email=prediction)
+   return render_template('inbox-faith-email-detected.html', email =prediction)
 
 @app.route('/inbox-rebecca-email-detected.html/inbox-rebecca-email.html')
 def inbox_rebecca_email():
@@ -75,7 +88,7 @@ def inbox_rebecca_email_w_pop_up():
    fh= open('./templates/calendar-main.html')
    content = fh.read()
    content = content.replace(re.findall('''<div class="caption-Cexj9x valign-text-middle opensans-bold-chicago-16px">Tuesday</div>
-            <div class="caption-ebNaBO valign-text-middle opensans-bold-chicago-16px">21</div>''', content)[0],
+         <div class="caption-ebNaBO valign-text-middle opensans-bold-chicago-16px">21</div>''', content)[0],
          '''<div class="caption-Cexj9x valign-text-middle opensans-bold-chicago-16px">Tuesday</div>
          <div class="caption-ebNaBO valign-text-middle opensans-bold-chicago-16px">21</div>
          <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
@@ -86,8 +99,7 @@ def inbox_rebecca_email_w_pop_up():
             rebecca_tan@sutd.edu.sg<br />Think Thank 23 (2.413)
                </div> 
             </div>
-            </div>
-         ''' )
+         </div>''' )
    fh.close()
    fh=open('./templates/calendar-main.html','w')
    fh.write(content)
@@ -96,23 +108,24 @@ def inbox_rebecca_email_w_pop_up():
 @app.route('/inbox-rebecca-email-detected.html')
 def inbox_rebecca_email_detected():
    html = './templates/inbox-rebecca-email.html'
-   count_vect = CountVectorizer()
-   final_features = html2text(html)
-   prediction = model.predict(count_vect.fit_transform([final_features]))
+   text = html2text(html)
+   prediction = model.predict([text])
    
-   if (prediction==2) or (prediction==3):
+   if (prediction==1):
       prediction = "Meeting"
+      
    else:
       prediction = "Normal"
-   return render_template('inbox-rebecca-email-detected.html', email=prediction)
+   return render_template('inbox-rebecca-email-detected.html', email =prediction)
 
-@app.route('/inbox-faith-email-detected.html/inbox-faith-email.html/calendar-main.html')
+
+@app.route('/inbox-faith-email-detected.html/inbox-faith-email.html/calendar-event-3.html')
 def calendar_event_3():
-   return render_template('calendar-main.html')
+   return render_template('calendar-event-3.html')
 
-@app.route('/inbox-rebecca-email-detected.html/inbox-rebecca-email.html/calendar-main.html')
+@app.route('/inbox-rebecca-email-detected.html/inbox-rebecca-email.html/calendar-event-2.html')
 def calendar_event_2():
-   return render_template('calendar-main.html')
+   return render_template('calendar-event-2.html')
 
 @app.route('/inbox-new-email.html')
 def inbox_new_email():
@@ -162,6 +175,7 @@ def resetting():
    fh=open('./templates/calendar-main.html','w')
    fh.write(content)
    return 'calendar reset'
+
 
 if __name__ == "__main__":
    app.run(debug=True)
