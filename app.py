@@ -19,6 +19,10 @@ def predict(text):
       prediction = "Normal"
    return prediction
 
+@app.route('/')
+def my_form():
+    return render_template('entry.html')
+
 @app.route('/', methods=['POST'])
 def textentry():
     text = request.form['text']
