@@ -7,7 +7,6 @@ import joblib
 
 app = Flask(__name__)
 model = joblib.load('pipeline.pkl')
-
 # #To use the predict button in our web-app
 @app.route('/predict',methods=['GET'])
 def predict():
@@ -31,9 +30,9 @@ def textentry():
    prediction = model.predict([text])
    
    if (prediction==1):
-      prediction = "Meeting"
+      prediction = 1
    else:
-      prediction = "Normal"
+      prediction = 0
    return prediction
 
 
