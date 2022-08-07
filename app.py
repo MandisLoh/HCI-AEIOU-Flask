@@ -10,7 +10,7 @@ model = joblib.load('pipeline.pkl')
 
 # #To use the predict button in our web-app
 @app.route('/predict',methods=['GET'])
-def magic():
+def predict():
    args = request.args
    text = args.get('textbody')
    prediction = model.predict([text])
