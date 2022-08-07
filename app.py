@@ -15,9 +15,9 @@ def predict():
    prediction = model.predict([text])
    
    if (prediction==1):
-      prediction = "Meeting"
+      prediction = {'Prediction' : "Meeting"}
    else:
-      prediction = "Normal"
+      prediction = {'Prediction' : "Normal"}
    return prediction
 
 @app.route('/')
