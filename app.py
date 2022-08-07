@@ -7,11 +7,11 @@ import joblib
 
 
 app = Flask(__name__)
-cors = CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(app)
 model = joblib.load('pipeline.pkl')
 # #To use the predict button in our web-app
 @app.route('/predict',methods=['GET'])
-@cross_origin(origins=['*'])
+# @cross_origin(origins=['*'])
 def predict():
    args = request.args
    text = args.get('textbody')
