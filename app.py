@@ -2,16 +2,19 @@
 import numpy as np
 import pandas as pd
 from flask import Flask, render_template,request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import joblib
 
 
 app = Flask(__name__)
 # cors = CORS(app, resources={r'/*': {'origins': '*'}})
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 model = joblib.load('pipeline.pkl')
 # #To use the predict button in our web-app
 @app.route('/predict',methods=['GET'])
-@cross_origin(origins=['*'])
+#@cross_origin(app, support_credentials= True, origins=['*'])
+@cross_origin()
 def predict():
    args = request.args
    text = args.get('textbody')
