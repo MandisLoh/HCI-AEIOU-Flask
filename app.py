@@ -21,9 +21,9 @@ def predict():
    prediction = model.predict([text])
    
    if (prediction==1):
-      prediction = {'Prediction' : "Meeting"}
+      prediction = 1
    else:
-      prediction = {'Prediction' : "Normal"}
+      prediction = 0
    return prediction
 
 @app.route('/')
