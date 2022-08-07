@@ -11,6 +11,7 @@ cors = CORS(app, resources={r'/*': {'origins': '*'}})
 model = joblib.load('pipeline.pkl')
 # #To use the predict button in our web-app
 @app.route('/predict',methods=['GET'])
+@cross_origin(origins=['*'])
 def predict():
    args = request.args
    text = args.get('textbody')
