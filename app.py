@@ -21,9 +21,9 @@ def predict():
    prediction = model.predict([text])
    
    if (prediction==1):
-      prediction = 1
+      prediction = '1'
    else:
-      prediction = 0
+      prediction = '0'
    return prediction
 
 @app.route('/')
