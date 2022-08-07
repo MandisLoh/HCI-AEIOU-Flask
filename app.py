@@ -2,10 +2,12 @@
 import numpy as np
 import pandas as pd
 from flask import Flask, render_template,request
+from flask_cors import CORS
 import joblib
 
 
 app = Flask(__name__)
+cors = CORS(app, resources={r'/*': {'origins': '*'}})
 model = joblib.load('pipeline.pkl')
 # #To use the predict button in our web-app
 @app.route('/predict',methods=['GET'])
